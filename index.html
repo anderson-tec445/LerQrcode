@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitor de Código de Barras e QR Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #reader {
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            margin-bottom: 10px;
+        }
+
+        #result {
+            font-size: 1.2em;
+            color: green;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Leitor de Código de Barras e QR Code</h1>
+    <div id="reader"></div>
+    <p id="result">Aguardando leitura...</p>
+
+    <!-- Biblioteca Html5-Qrcode -->
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+
+    <script>
+        // Lista de produtos simulada
+        const produtos = {
+            "123456789012": "Produto A",
+            "987654321098": "Produto B",
+            "112233445566": "Produto C",
+            "qrcode_produto_a": "QR Produto A",
+            "qrcode_produto_b": "QR Produto B"
+        };
+
+        // Inicializa o leitor de código
+        function onScanSuccess(decodedText, decodedResult) {
+            const produto = produtos[decodedText];
+            if (produto) {
+                document.getElementById('result').innerText = `Produto: ${produto}`;
+            } else {
+                document.getElementById('result').innerText = "Produto não encontrado.";
+            }
+        }
+
+        function onScanFailure(error) {
+            // Ignora erros de escaneamento contínuos
+        }
+
+        // Configurações do Html5QrcodeScanner
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            false
+        );
+
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    </script>
+</body>
+</html>
